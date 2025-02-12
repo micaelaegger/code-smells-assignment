@@ -94,29 +94,34 @@ function showProduct(product: Product) {
     5. Följande funktion kommer presentera studenter. Men det finns ett antal saker som 
     går att göra betydligt bättre. Gör om så många som du kan hitta!
     */
-  function presentStudents(students: Student[]) {
-    for (const student of students) {
-      if (student.handedInOnTime) {
-        let container = document.createElement("div");
-        let checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.checked = true;
-  
-        container.appendChild(checkbox);
-        let listOfStudents = document.querySelector("ul#passedstudents");
-        listOfStudents?.appendChild(container);
-      } else {
-        let container = document.createElement("div");
-        let checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.checked = false;
-  
-        container.appendChild(checkbox);
-        let listOfStudents = document.querySelector("ul#failedstudents");
-        listOfStudents?.appendChild(container);
-      }
+   //Har utgått från klassen "Student" i uppgift 2.
+function createStudentElement(student: Student): HTMLElement {
+  const container = document.createElement("div");
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.checked = student.handedInOnTime;
+  container.appendChild(checkbox);
+  return container;
+}
+
+function presentStudents(students: Student[]) {
+  const passedStudentsList = document.querySelector("ul#passedstudents");
+  const failedStudentsList = document.querySelector("ul#failedstudents");
+
+  if (!passedStudentsList || !failedStudentsList) {
+    console.error("One or both of the student lists are missing in the DOM.");
+    return;
+  }
+
+  for (const student of students) {
+    const studentElement = createStudentElement(student);
+    if (student.handedInOnTime) {
+      passedStudentsList.appendChild(studentElement);
+    } else {
+      failedStudentsList.appendChild(studentElement);
     }
   }
+}
   
   /*
     6. Skriv en funktion som skall slå ihop följande texter på ett bra sätt:
