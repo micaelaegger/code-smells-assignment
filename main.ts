@@ -61,29 +61,34 @@
     4. Följande funktion kommer att presentera ett objekt i dom:en. 
     Se om du kan göra det bättre. Inte bara presentationen räknas, även strukturer.
     */
-  
-  function showProduct(
-    name: string,
-    price: number,
-    amount: number,
-    description: string,
-    image: string,
-    parent: HTMLElement
-  ) {
-    let container = document.createElement("div");
-    let title = document.createElement("h4");
-    let pris = document.createElement("strong");
-    let imageTag = document.createElement("img");
-  
-    title.innerHTML = name;
-    pris.innerHTML = price.toString();
-    imageTag.src = image;
-  
-    container.appendChild(title);
-    container.appendChild(imageTag);
-    container.appendChild(pris);
-    parent.appendChild(container);
-  }
+class Product {
+  constructor(
+    public name: string,
+    public price: number,
+    public amount: number,
+    public description: string,
+    public image: string
+  ) {}
+}
+
+function createProductHTML(product: Product): HTMLElement {
+  const container = document.createElement("div");
+  container.innerHTML = `
+    <h4>${product.name}</h4>
+    <img src="${product.image}" alt="${product.name}">
+    <p>${product.price}</p>
+    <p>${product.description}</p>
+    <p>Amount: ${product.amount}</p>
+  `;
+  return container;
+}
+
+// Förutsatt att det då finns ett div-element med id "product-container" i HTML:en. 
+function showProduct(product: Product) {
+  const parent = document.getElementById("product-container") as HTMLElement;
+  const productHTML = createProductHTML(product);
+  parent?.appendChild(productHTML);
+}
   
   /*
     5. Följande funktion kommer presentera studenter. Men det finns ett antal saker som 
