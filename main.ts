@@ -39,22 +39,22 @@
     Det finns flera code smells att identifiera här. Vissa är lurigare än andra.
     */
   
-  class Temp {
-    constructor(public q: string, public where: Date, public v: number) {}
+  class TemperatureRecord {
+    constructor(public location: string, public date: Date, public temperature: number) {}
   }
   
-  function averageWeeklyTemperature(heights: Temp[]) {
-    let r = 0;
+  function sumWeeklyTemperature(records: TemperatureRecord[]) {
+    let totalTemperature = 0;
   
-    for (let who = 0; who < heights.length; who++) {
-      if (heights[who].q === "Stockholm") {
-        if (heights[who].where.getTime() > Date.now() - 604800000) {
-          r += heights[who].v;
+    for (let i = 0; i < records.length; i++) {
+      if (records[i].location === "Stockholm") {
+        if (records[i].date.getTime() > Date.now() - 604800000) {
+          totalTemperature += records[i].temperature;
         }
       }
     }
   
-    return r / 7;
+    return totalTemperature / 7;
   }
   
   /*
