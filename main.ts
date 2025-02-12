@@ -5,19 +5,15 @@
   */
 
   function getLength(jumpings: number[]): number {
-    let totalNumber = 0;
-  
-    totalNumber = jumpings.reduce(
-      (jumpDistanceSoFar, currentJump) => jumpDistanceSoFar + currentJump
+    return jumpings.reduce(
+      (jumpDistanceSoFar, currentJump) => jumpDistanceSoFar + currentJump,
+      0 
     );
-  
-    return totalNumber;
   }
   
   /*
     2. I detta exempel har vi fokuserat på if-statements. Se om du kan göra exemplet bättre!
     */
-  
   class Student {
     constructor(
       public name: string,
@@ -27,18 +23,15 @@
   }
   
   function getStudentStatus(student: Student): string {
-    student.passed =
-      student.name == "Sebastian"
-        ? student.handedInOnTime
-          ? true
-          : false
-        : false;
-  
-    if (student.passed) {
-      return "VG";
+    let passed: boolean;
+
+    if (student.name === "Sebastian" && student.handedInOnTime) {
+      passed = true;
     } else {
-      return "IG";
+      passed = false;
     }
+
+    return passed ? "VG" : "IG";
   }
   
   /*
@@ -46,79 +39,89 @@
     Det finns flera code smells att identifiera här. Vissa är lurigare än andra.
     */
   
-  class Temp {
-    constructor(public q: string, public where: Date, public v: number) {}
+  class TemperatureRecord {
+    constructor(public location: string, public date: Date, public temperature: number) {}
   }
   
-  function averageWeeklyTemperature(heights: Temp[]) {
-    let r = 0;
+  function sumWeeklyTemperature(records: TemperatureRecord[]) {
+    let totalTemperature = 0;
   
-    for (let who = 0; who < heights.length; who++) {
-      if (heights[who].q === "Stockholm") {
-        if (heights[who].where.getTime() > Date.now() - 604800000) {
-          r += heights[who].v;
+    for (let i = 0; i < records.length; i++) {
+      if (records[i].location === "Stockholm") {
+        if (records[i].date.getTime() > Date.now() - 604800000) {
+          totalTemperature += records[i].temperature;
         }
       }
     }
   
-    return r / 7;
+    return totalTemperature / 7;
   }
   
   /*
     4. Följande funktion kommer att presentera ett objekt i dom:en. 
     Se om du kan göra det bättre. Inte bara presentationen räknas, även strukturer.
     */
-  
-  function showProduct(
-    name: string,
-    price: number,
-    amount: number,
-    description: string,
-    image: string,
-    parent: HTMLElement
-  ) {
-    let container = document.createElement("div");
-    let title = document.createElement("h4");
-    let pris = document.createElement("strong");
-    let imageTag = document.createElement("img");
-  
-    title.innerHTML = name;
-    pris.innerHTML = price.toString();
-    imageTag.src = image;
-  
-    container.appendChild(title);
-    container.appendChild(imageTag);
-    container.appendChild(pris);
-    parent.appendChild(container);
-  }
+class Product {
+  constructor(
+    public name: string,
+    public price: number,
+    public amount: number,
+    public description: string,
+    public image: string
+  ) {}
+}
+
+function createProductHTML(product: Product): HTMLElement {
+  const container = document.createElement("div");
+  container.innerHTML = `
+    <h4>${product.name}</h4>
+    <img src="${product.image}" alt="${product.name}">
+    <p>${product.price}</p>
+    <p>${product.description}</p>
+    <p>Amount: ${product.amount}</p>
+  `;
+  return container;
+}
+
+// Förutsatt att det då finns ett div-element med id "product-container" i HTML:en. 
+function showProduct(product: Product) {
+  const parent = document.getElementById("product-container") as HTMLElement;
+  const productHTML = createProductHTML(product);
+  parent?.appendChild(productHTML);
+}
   
   /*
     5. Följande funktion kommer presentera studenter. Men det finns ett antal saker som 
     går att göra betydligt bättre. Gör om så många som du kan hitta!
     */
-  function presentStudents(students: Student[]) {
-    for (const student of students) {
-      if (student.handedInOnTime) {
-        let container = document.createElement("div");
-        let checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.checked = true;
-  
-        container.appendChild(checkbox);
-        let listOfStudents = document.querySelector("ul#passedstudents");
-        listOfStudents?.appendChild(container);
-      } else {
-        let container = document.createElement("div");
-        let checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.checked = false;
-  
-        container.appendChild(checkbox);
-        let listOfStudents = document.querySelector("ul#failedstudents");
-        listOfStudents?.appendChild(container);
-      }
+   //Har utgått från klassen "Student" i uppgift 2.
+function createStudentElement(student: Student): HTMLElement {
+  const container = document.createElement("div");
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.checked = student.handedInOnTime;
+  container.appendChild(checkbox);
+  return container;
+}
+
+function presentStudents(students: Student[]) {
+  const passedStudentsList = document.querySelector("ul#passedstudents");
+  const failedStudentsList = document.querySelector("ul#failedstudents");
+
+  if (!passedStudentsList || !failedStudentsList) {
+    console.error("One or both of the student lists are missing in the DOM.");
+    return;
+  }
+
+  for (const student of students) {
+    const studentElement = createStudentElement(student);
+    if (student.handedInOnTime) {
+      passedStudentsList.appendChild(studentElement);
+    } else {
+      failedStudentsList.appendChild(studentElement);
     }
   }
+}
   
   /*
     6. Skriv en funktion som skall slå ihop följande texter på ett bra sätt:
@@ -162,4 +165,3 @@
       return "Du är under 20 år";
     }
   }
-  
