@@ -14,7 +14,6 @@
   /*
     2. I detta exempel har vi fokuserat på if-statements. Se om du kan göra exemplet bättre!
     */
-  
   class Student {
     constructor(
       public name: string,
@@ -24,18 +23,15 @@
   }
   
   function getStudentStatus(student: Student): string {
-    student.passed =
-      student.name == "Sebastian"
-        ? student.handedInOnTime
-          ? true
-          : false
-        : false;
-  
-    if (student.passed) {
-      return "VG";
+    let passed: boolean;
+
+    if (student.name === "Sebastian" && student.handedInOnTime) {
+      passed = true;
     } else {
-      return "IG";
+      passed = false;
     }
+
+    return passed ? "VG" : "IG";
   }
   
   /*
@@ -159,4 +155,3 @@
       return "Du är under 20 år";
     }
   }
-  
