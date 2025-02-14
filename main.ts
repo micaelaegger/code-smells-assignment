@@ -123,15 +123,9 @@ function showProduct(product: Product) {
     Lorem, ipsum, dolor, sit, amet
     Exemplet under löser problemet, men inte speciellt bra. Hur kan man göra istället?
     */
-  function concatenateStrings() {
-    let result = "";
-    result += "Lorem";
-    result += "ipsum";
-    result += "dolor";
-    result += "sit";
-    result += "amet";
-  
-    return result;
+  function concatenateStrings(): string {
+    const words = ["Lorem", "ipsum", "dolor", "sit", "amet"];
+    return words.join(", ");
   }
   
   /* 
